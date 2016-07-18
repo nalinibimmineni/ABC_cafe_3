@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:twitter="http://www.mulesoft.org/schema/mule/twitter" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/twitter http://www.mulesoft.org/schema/mule/twitter/current/mule-twitter.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+    <sfdc:config name="Salesforce__Basic_Authentication" username="nalini@whishworks.com" password="nagu881@" securityToken="njl4ncUBahZveU6RPcrdEQCs" url="https://nalini-dev-ed.my.salesforce.com/services/Soap/u/36.0" doc:name="Salesforce: Basic Authentication"/>
+    <twitter:config name="Twitter__Configuration" accessKey="750555922481680384-WeB0sSeoCr6PhJz7IvIfRhGodAlEhve" accessSecret="FiXeMZECr9WkP5JKPT8dfYjxJJquOeJDHarKWiPl6HJqf" consumerKey="uszVfe7cfAcF32QfcydcQ5h9z" consumerSecret="DM9EGev1j47JhuGRCLgHmEccxcDGJcdOGsV5VMin0mtArjpABi" doc:name="Twitter: Configuration"/>
+    <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="8081" doc:name="HTTP Listener Configuration"/>
+    <flow name="projectsampleFlow1">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/accounts" doc:name="HTTP"/>
+        <sfdc:query config-ref="Salesforce__Basic_Authentication" query="dsql:SELECT AccountNumber,BillingCity,Name,Phone,Type FROM Account ORDER BY AccountNumber ASC" doc:name="Salesforce"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <twitter:update-status config-ref="Twitter__Configuration" status="Record is successfully inserted" doc:name="Twitter"/>
+    </flow>
+</mule>
